@@ -34,27 +34,38 @@
 
 ## 配置文件详情
 
-1. 配置
+1. 默认配置
    ```json
    {
-  "url": {
-    "get_qrcode": "https://passport.bilibili.com/x/passport-login/web/qrcode/generate",
-    "check_qrcode_scan": "https://passport.bilibili.com/x/passport-login/web/qrcode/poll",
-    "play_api": "https://api.bilibili.com/x/player/playurl",
-    "convert_cid": "https://api.bilibili.com/x/player/pagelist",
-    "login_url": "https://api.bilibili.com/x/web-interface/nav",
-    "video_info": "https://api.bilibili.com/x/web-interface/view"
-  },
-  "basic_headers": {
-    "user-agent": "Mozilla/5.0",
-    "referer": "https://www.bilibili.com"
-  },
-  "video": {
-    "video_path": "video"
-  },
-  "aria2c": {
-    "continue": "true",
-    "split": "16",
-    "max_connection_per_server": "8"
-  }
-}
+     "url": {
+       "get_qrcode": "https://passport.bilibili.com/x/passport-login/web/qrcode/generate",   //获取二维码
+       "check_qrcode_scan": "https://passport.bilibili.com/x/passport-login/web/qrcode/poll",   //查询二维码状态
+       "play_api": "https://api.bilibili.com/x/player/playurl",   //播放器api
+       "convert_cid": "https://api.bilibili.com/x/player/pagelist",   //将bvid转为cid
+       "login_url": "https://api.bilibili.com/x/web-interface/nav",   //查询用户登录状态
+       "video_info": "https://api.bilibili.com/x/web-interface/view"   //查询视频详细信息
+     },
+     "basic_headers": {
+       "user-agent": "Mozilla/5.0",
+       "referer": "https://www.bilibili.com"   //b站视频的防盗链，勿删，否则视频会无法下载
+     },
+     "video": {
+       "video_path": "video"   //视频的存放路径，可修改
+     },
+     "aria2c": {
+       "continue": "true",   //是否启用aria2断点续传，该选项用于网络环境不好的情况下使用，建议为true
+       "split": "16",   //分片下载，这里设置16片，最大可设32，过大的会话可能会被服务器限流
+       "max_connection_per_server": "8"   //服务器最大连接数，某些地方的网络可能会限制会话，若出现视频下载未响应请调整，默认为5
+     }
+   }
+
+## 使用方式
+
+1. 运行主程序脚本下载视频
+   ```bash
+   python main.py <BV号>
+替换 <BV号> 为你要下载的视频 BV 号。 </br>
+
+2. 使用演示
+https://github.com/user-attachments/assets/e8f0429f-f1b8-46e1-8869-227a05a171e8
+
