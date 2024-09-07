@@ -68,3 +68,10 @@
 
 2. 使用演示
 ![1](https://github.com/user-attachments/assets/5cd99563-a747-4a60-b1ff-0cc64012f151)
+![image](https://github.com/user-attachments/assets/bed74c2c-4a37-4f79-baff-be533f2d590e)
+
+## 须知
+1. 非登录用户只能下载360P视频
+2. 非大会员用户只能下载低码率1080P视频
+3. 1080P+，1080P60，4k，8k，杜比，Hi-Res等视频需要账号性质为大会员方得下载
+
