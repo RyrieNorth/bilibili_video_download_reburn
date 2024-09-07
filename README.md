@@ -35,7 +35,7 @@
 ## 配置文件详情
 
 1. 默认配置
-   ```bash
+   ```json
    {
      "url": {
        "get_qrcode": "https://passport.bilibili.com/x/passport-login/web/qrcode/generate",   //获取二维码
