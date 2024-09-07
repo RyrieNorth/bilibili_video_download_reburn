@@ -31,3 +31,30 @@
    ```bash
    cd bilibili_video_download_reburn
    python setup.py install
+
+## 配置文件详情
+
+1. 配置
+   ```json
+   {
+  "url": {
+    "get_qrcode": "https://passport.bilibili.com/x/passport-login/web/qrcode/generate",
+    "check_qrcode_scan": "https://passport.bilibili.com/x/passport-login/web/qrcode/poll",
+    "play_api": "https://api.bilibili.com/x/player/playurl",
+    "convert_cid": "https://api.bilibili.com/x/player/pagelist",
+    "login_url": "https://api.bilibili.com/x/web-interface/nav",
+    "video_info": "https://api.bilibili.com/x/web-interface/view"
+  },
+  "basic_headers": {
+    "user-agent": "Mozilla/5.0",
+    "referer": "https://www.bilibili.com"
+  },
+  "video": {
+    "video_path": "video"
+  },
+  "aria2c": {
+    "continue": "true",
+    "split": "16",
+    "max_connection_per_server": "8"
+  }
+}
