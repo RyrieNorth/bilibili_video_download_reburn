@@ -35,7 +35,7 @@
 ## 配置文件详情
 
 1. 默认配置
-   ```json
+   ```bash
    {
      "url": {
        "get_qrcode": "https://passport.bilibili.com/x/passport-login/web/qrcode/generate",   //获取二维码
@@ -67,5 +67,4 @@
 替换 <BV号> 为你要下载的视频 BV 号。 </br>
 
 2. 使用演示
-https://github.com/user-attachments/assets/e8f0429f-f1b8-46e1-8869-227a05a171e8
-
+![1](https://github.com/user-attachments/assets/5cd99563-a747-4a60-b1ff-0cc64012f151)
