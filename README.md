@@ -1,6 +1,7 @@
 # Bilibili 视频下载工具
 
-这是一个用于下载 Bilibili 视频的 Python 工具，支持单 P 和多 P 视频的下载及合并。该工具依赖于 [SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) 提供的 Bilibili API。
+一个简单的用于下载 Bilibili 视频的 Python 工具，支持单 P 和多 P 视频的下载。</br>
+基于 [SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) 提供的 Bilibili API。
 
 ## 功能
 
@@ -28,6 +29,5 @@
 2. 从release中下载安装：
 
    ```bash
-   unzip bilibili_video_download_reburn-v0.1.zip
    cd bilibili_video_download_reburn
    python setup.py install
