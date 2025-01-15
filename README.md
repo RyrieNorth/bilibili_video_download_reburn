@@ -22,7 +22,7 @@
 1. 克隆安装：
 
    ```bash
-   git clone https://github.com/NorthSky-Ryrie/bilibili_video_download_reburn.git
+   git clone https://github.com/RyrieNorth/bilibili_video_download_reburn.git
    cd bilibili_video_download_reburn
    python setup.py install
 
