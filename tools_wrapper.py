@@ -22,6 +22,7 @@ class Aria2c:
             f'-s{self.aria2c_config.get("split", 1)}' if "split" in self.aria2c_config else "",
             f'-x{self.aria2c_config.get("max_connection_per_server", 1)}' if "max_connection_per_server" in self.aria2c_config else "",
             "--file-allocation=none",
+            "--check-certificate=false",    # 由于RHEL系Linux系统默认系统CA证书与aria2c编译时的证书名称不一致, 故直接取消证书校验
             "--summary-interval=0"
         ]
         return " ".join(filter(None, options))
