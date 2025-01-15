@@ -24,12 +24,14 @@
    ```bash
    git clone https://github.com/RyrieNorth/bilibili_video_download_reburn.git
    cd bilibili_video_download_reburn
+   pip3 install .
    python setup.py install
 
 2. 从release中下载安装：
 
    ```bash
    cd bilibili_video_download_reburn
+   pip3 install .
    python setup.py install
 
 ## 配置文件详情
