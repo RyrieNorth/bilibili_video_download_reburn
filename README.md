@@ -69,7 +69,9 @@
 替换 <BV号> 为你要下载的视频 BV 号。 </br>
 
 2. 使用演示
+单P模式：
 ![1](https://github.com/user-attachments/assets/5cd99563-a747-4a60-b1ff-0cc64012f151)
+多P模式：
 ![image](https://github.com/user-attachments/assets/bed74c2c-4a37-4f79-baff-be533f2d590e)
 
 ## 须知
