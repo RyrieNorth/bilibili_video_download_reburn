@@ -68,7 +68,7 @@
    python main.py <BV号>
 替换 <BV号> 为你要下载的视频 BV 号。 </br>
 
-2. 使用演示
+2. 使用演示</br>
 单P模式：
 ![1](https://github.com/user-attachments/assets/5cd99563-a747-4a60-b1ff-0cc64012f151)
 多P模式：
