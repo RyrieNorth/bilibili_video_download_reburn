@@ -13,7 +13,7 @@
 ## 环境要求
 
 - Python 3.6 或更高版本
-- `requests`, `qrcode`, windows 还会需要`PyQt5, PyQt5-tools` 库
+- `requests`, `qrcode`, windows 还会需要`PyQt5, PyQt5-tools` 库 (v0.3版本仅需`requests`、`qrcode`库)
 - `Aria2c` 工具（用于下载视频）（已集成在tools文件夹中）
 - `FFmpeg` 工具（用于合并视频和音频）（已集成在tools文件夹中且已经过裁剪）
 
