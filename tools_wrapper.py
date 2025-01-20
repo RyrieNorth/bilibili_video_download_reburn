@@ -3,6 +3,7 @@ import subprocess
 import re
 import sys
 
+
 class Aria2c:
     def __init__(self, download_path, referer, aria2c_config):
         self.download_path = download_path
@@ -13,25 +14,35 @@ class Aria2c:
     def get_aria2c_command(self):
         aria2c_path = r".\tools\aria2c.exe" if os.name == "nt" else "./tools/aria2c"
         if not os.path.isfile(aria2c_path):
-            raise FileNotFoundError(f"指定的工具文件 {aria2c_path} 不存在，请检查路径。")
+            raise FileNotFoundError(
+                f"指定工具文件 {aria2c_path} 不存在, 请检查路径或该工具是否存在。"
+            )
         return aria2c_path
 
     def aria2c_options(self):
         options = [
             "-c" if self.aria2c_config.get("continue") == "true" else "",
-            f'-s{self.aria2c_config.get("split", 1)}' if "split" in self.aria2c_config else "",
-            f'-x{self.aria2c_config.get("max_connection_per_server", 1)}' if "max_connection_per_server" in self.aria2c_config else "",
+            (
+                f'-s{self.aria2c_config.get("split", 1)}'
+                if "split" in self.aria2c_config
+                else ""
+            ),
+            (
+                f'-x{self.aria2c_config.get("max_connection_per_server", 1)}'
+                if "max_connection_per_server" in self.aria2c_config
+                else ""
+            ),
             "--file-allocation=none",
-            "--check-certificate=false",    # 由于RHEL系Linux系统默认系统CA证书与aria2c编译时的证书名称不一致, 故直接取消证书校验
-            "--summary-interval=0"
+            "--check-certificate=false",  # aria2c编译时使用非RHEL的发行版, 故在建立SSL/TLS连接时会提示找不到CA证书, 故这里直接关闭证书校验
+            "--summary-interval=0",
         ]
         return " ".join(filter(None, options))
 
     def print_progress_bar(self, progress, total, bar_length=40):
         percent = float(progress) / total
-        arrow = '█' * int(round(percent * bar_length))
-        spaces = ' ' * (bar_length - len(arrow))
-        sys.stdout.write(f"\rProgress: [{arrow}{spaces}] {progress}%")
+        arrow = "█" * int(round(percent * bar_length))
+        spaces = " " * (bar_length - len(arrow))
+        sys.stdout.write(f"\rProgress: [{arrow}{spaces} ] {progress}%")
         sys.stdout.flush()
 
     def run_download_command(self, url, output_file):
@@ -40,7 +51,12 @@ class Aria2c:
         download_command = f'{self.aria2c} {aria2c_options} --referer="{self.referer}" "{url}" -o "{output_path}"'
 
         with subprocess.Popen(
-            download_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True, encoding="utf-8"
+            download_command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
+            universal_newlines=True,
+            encoding="utf-8",
         ) as process:
             total_progress = 100
 
@@ -74,7 +90,9 @@ class FFmpeg:
     def get_ffmpeg_command(self):
         ffmpeg_path = r".\tools\ffmpeg.exe" if os.name == "nt" else "./tools/ffmpeg"
         if not os.path.isfile(ffmpeg_path):
-            raise FileNotFoundError(f"指定的工具文件 {ffmpeg_path} 不存在，请检查路径。")
+            raise FileNotFoundError(
+                f"指定工具文件 {ffmpeg_path} 不存在, 请检查路径或该工具是否存在。"
+            )
         return ffmpeg_path
 
     def run_ffmpeg_command(self, video_title):
