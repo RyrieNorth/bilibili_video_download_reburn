@@ -2,7 +2,7 @@
 
 一个简单的用于下载 Bilibili 视频的 Python 工具，支持单P与多P视频下载 </br>
 基于 [SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) 开发</br>
-自 v0.3 版本开始已将 `windows` 与 `linux` 版本区分
+自 `v0.3` 版本开始已将 `windows` 与 `linux` 版本区分
 
 ## 功能
 
@@ -14,7 +14,7 @@
 ## 环境要求
 
 - Python 3.6 或更高版本
-- `requests`, `qrcode`, windows 还会需要`PyQt5, PyQt5-tools` 库 (v0.3版本仅需`requests`、`qrcode`库)
+- `requests`, `qrcode`, windows 还会需要`PyQt5, PyQt5-tools` 库 ( `v0.3` 版本仅需`requests`、`qrcode`库)
 - `Aria2c` 工具（用于下载视频）（已集成在tools文件夹中）
 - `FFmpeg` 工具（用于合并视频和音频）（已集成在tools文件夹中且已经过裁剪）
 
