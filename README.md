@@ -1,7 +1,7 @@
 # bilibili_video_download_reburn
 
 一个简单的用于下载 Bilibili 视频的 Python 工具，支持单P与多P视频下载 </br>
-基于 [SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) 开发
+基于 [SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) 开发</br>
 自 v0.3 版本开始已将 `windows` 与 `linux` 版本区分
 
 ## 功能
