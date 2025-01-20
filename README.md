@@ -77,6 +77,13 @@
 视频信息：
 ![image](https://github.com/user-attachments/assets/bed74c2c-4a37-4f79-baff-be533f2d590e)
 
+## 关于字符集</br>
+1. 由于我当前环境下的Windows CMD代码页为GBK(936), 字体为新宋体, 这样会导致二维码显示异常, 如下图：
+![qr_err](https://github.com/user-attachments/assets/899394cc-c728-493f-b8bd-9f4a96f69e85)
+2. 解决方式为, 修改CMD代码页与字体, 如下图：
+![zifu](https://github.com/user-attachments/assets/34c81b41-5fad-496f-afe1-fcf858e122d5)
+![ziti](https://github.com/user-attachments/assets/79b29cb6-ea7c-404c-b6f2-f007ceb3a165)
+
 ## 须知
 1. 非登录用户只能下载360P视频
 2. 非大会员用户只能下载低码率1080P视频
@@ -84,8 +91,3 @@
 
 ## 已知问题
 1. 在Linux下使用时无法正常显示进度条(测试环境：CentOS 7.9 2009、RockyLinux 9.3), 故推荐使用Windows平台运行本工具
-
-
-
-
-
