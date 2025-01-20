@@ -72,6 +72,8 @@
 单P模式：
 ![1](https://github.com/user-attachments/assets/5cd99563-a747-4a60-b1ff-0cc64012f151)
 多P模式：
+https://github.com/user-attachments/assets/05f54a3b-f97f-445a-9b1a-7f7e910c18ea</br>
+视频信息：
 ![image](https://github.com/user-attachments/assets/bed74c2c-4a37-4f79-baff-be533f2d590e)
 
 ## 须知
@@ -81,4 +83,8 @@
 
 ## 已知问题
 1. 在Linux下使用时无法正常显示进度条(测试环境：CentOS 7.9 2009、RockyLinux 9.3), 故推荐使用Windows平台运行本工具
+
+
+
+
 
