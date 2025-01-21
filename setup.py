@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(
-    name="bilibili_video_download_reburn_for_windows",
+    name="bilibili_video_download_reburn_",
     version="0.3",
     license="MIT",
     url="https://github.com/RyrieNorth/bilibili_video_download_reburn",
