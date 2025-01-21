@@ -35,7 +35,7 @@
    ```bash
    pip list # 查找bilibili_video_download相关字眼, 例如：bilibili-video-download-reburn-for-linux
    pip uninstall bilibili-video-download-reburn-for-linux
-   无论是直接从python setup.py install 还是在 pip 卸载方式都一样
+   无论是直接从 python setup.py install 还是在 pip 卸载方式都一样
 
 ## 配置文件详情
 
@@ -78,21 +78,23 @@
    main(bv)
    
 3. 使用演示</br>
-当cookies信息不存在时：
+**当cookies信息不存在时：**</br></br>
 ![show_1](https://github.com/user-attachments/assets/4568d8c7-7ad1-4213-a129-71282cc8dd58)
+</br>
 
-命令行演示：
+**命令行演示：**</br></br>
 ![show_2](https://github.com/user-attachments/assets/88291763-ef42-45e7-91bc-22171419b9f9)
 
-作为库调用运行：
+**作为库调用运行：**</br></br>
 ![show_3](https://github.com/user-attachments/assets/ed88477e-583a-4c0a-8522-d028b69b3be8)
 
-单P模式(旧版)：
+**单P模式(旧版)：**</br>
 ![1](https://github.com/user-attachments/assets/5cd99563-a747-4a60-b1ff-0cc64012f151)
-多P模式(旧版)：
+
+**多P模式(旧版)：**</br>
 ![1](https://github.com/user-attachments/assets/e8056adf-98b1-4017-9d76-d55f1a6a773e)
 
-视频信息：
+**视频信息：**</br>
 ![image](https://github.com/user-attachments/assets/bed74c2c-4a37-4f79-baff-be533f2d590e)
 
 ## 关于字符集</br>
