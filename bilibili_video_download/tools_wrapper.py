@@ -67,7 +67,7 @@ class Aria2c:
                 else ""
             ),
             "--file-allocation=none",
-            "--check-certificate=false",  # aria2c编译时使用非RHEL的发行版, 故在建立SSL/TLS连接时会提示找不到CA证书, 故这里直接关闭证书校验
+            "--check-certificate=false",  # 由于aria2c编译时使用非RHEL的发行版, 在建立SSL/TLS连接时会提示找不到CA证书, 故这里直接关闭证书校验
             "--summary-interval=0",
         ]
         return " ".join(filter(None, options))
