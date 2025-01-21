@@ -1,0 +1,9 @@
+include setup.py
+include bilibili_video_download\__init__.py
+include bilibili_video_download\main.py
+include bilibili_video_download\tools_wrapper.py
+include bilibili_video_download\utils.py
+include bilibili_video_download\cli.py
+include bilibili_video_download\tools\aria2c.exe
+include bilibili_video_download\tools\ffmpeg.exe
+include bilibili_video_download\config.json
