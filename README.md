@@ -24,16 +24,20 @@
 
    ```bash
    git clone https://github.com/RyrieNorth/bilibili_video_download_reburn.git
-   cd bilibili_video_download_reburn
-   pip3 install .
+   cd bilibili_video_download_reburn/
    python setup.py install
 
 2. 从release中下载安装：
 
    ```bash
-   cd bilibili_video_download_reburn
-   pip3 install .
-   python setup.py install
+   wget https://github.com/RyrieNorth/bilibili_video_download_reburn/releases/download/v0.3/bilibili_video_download_reburn_for_linux-0.3-py3-none-any.whl
+   pip install bilibili_video_download_reburn_for_linux-0.3-py3-none-any.whl
+
+3. 如何卸载：
+   ```bash
+   pip list # 查找bilibili_video_download相关字眼, 例如：bilibili-video-download-reburn-for-linux
+   pip uninstall bilibili-video-download-reburn-for-linux
+   无论是直接从python setup.py install 还是在 pip 卸载方式都一样
 
 ## 配置文件详情
 
@@ -64,15 +68,30 @@
 
 ## 使用方式
 
-1. 运行主程序脚本下载视频
+1. 在终端直接运行：
    ```bash
-   python main.py <BV号>
-替换 <BV号> 为你要下载的视频 BV 号。 </br>
+   bl_download <BV号> 
+替换 <BV号> 为你要下载的视频 BV 号。(期间若没有登陆成功会触发登陆逻辑) </br>
 
-2. 使用演示</br>
-单P模式：
+2. 作为库使用：
+   ```python
+   from bilibili_video_download import main
+   bv = "BV1Gg411L7zg"
+   main(bv)
+   
+3. 使用演示</br>
+当cookies信息不存在时：
+![show_1](https://github.com/user-attachments/assets/4568d8c7-7ad1-4213-a129-71282cc8dd58)
+
+命令行演示：
+![show_2](https://github.com/user-attachments/assets/88291763-ef42-45e7-91bc-22171419b9f9)
+
+作为库调用运行：
+![show_3](https://github.com/user-attachments/assets/ed88477e-583a-4c0a-8522-d028b69b3be8)
+
+单P模式(旧版)：
 ![1](https://github.com/user-attachments/assets/5cd99563-a747-4a60-b1ff-0cc64012f151)
-多P模式：
+多P模式(旧版)：
 ![1](https://github.com/user-attachments/assets/e8056adf-98b1-4017-9d76-d55f1a6a773e)
 
 视频信息：
@@ -84,6 +103,7 @@
 2. 解决方式为, 修改CMD代码页与字体, 如下图：
 ![zifu](https://github.com/user-attachments/assets/34c81b41-5fad-496f-afe1-fcf858e122d5)
 ![ziti](https://github.com/user-attachments/assets/79b29cb6-ea7c-404c-b6f2-f007ceb3a165)
+
 
 ## 须知
 1. 非登录用户只能下载360P视频
