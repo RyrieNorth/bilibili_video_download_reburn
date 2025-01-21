@@ -6,4 +6,6 @@ include bilibili_video_download\utils.py
 include bilibili_video_download\cli.py
 include bilibili_video_download\tools\aria2c.exe
 include bilibili_video_download\tools\ffmpeg.exe
+include bilibili_video_download\tools\aria2c
+include bilibili_video_download\tools\ffmpeg
 include bilibili_video_download\config.json
