@@ -21,14 +21,12 @@
 ## 安装方式
 
 1. 克隆安装：
-
    ```bash
    git clone https://github.com/RyrieNorth/bilibili_video_download_reburn.git
    cd bilibili_video_download_reburn/
    python setup.py install
 
-2. 从release中下载安装：
-
+2. 从release中下载安装(注意版本信息)：
    ```bash
    wget https://github.com/RyrieNorth/bilibili_video_download_reburn/releases/download/v0.3/bilibili_video_download_reburn_for_linux-0.3-py3-none-any.whl
    pip install bilibili_video_download_reburn_for_linux-0.3-py3-none-any.whl
