@@ -29,13 +29,13 @@
 
 2. 从release中下载安装(注意版本信息)：
    ```bash
-   wget https://github.com/RyrieNorth/bilibili_video_download_reburn/releases/download/v0.4/bilibili_video_download_reburn_for_linux-0.4-py3-none-any.whl
-   pip install bilibili_video_download_reburn_for_linux-0.4-py3-none-any.whl
+   wget https://github.com/RyrieNorth/bilibili_video_download_reburn/releases/download/v0.4/bilibili_video_download_reburn_for_windows-0.4-py3-none-any.whl
+   pip install bilibili_video_download_reburn_for_windows-0.4-py3-none-any.whl
 
 3. 如何卸载：
    ```bash
-   pip list # 查找bilibili_video_download相关字眼, 例如：bilibili-video-download-reburn-for-linux
-   pip uninstall bilibili-video-download-reburn-for-linux
+   pip list # 查找bilibili_video_download相关字眼, 例如：bilibili-video-download-reburn-for-windows
+   pip uninstall bilibili-video-download-reburn-for-windows
    无论是直接从 python setup.py install 还是在 pip 卸载方式都一样
 
 ## 配置文件详情
