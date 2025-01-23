@@ -9,7 +9,7 @@ else:
 
 setup(
     name="bilibili_video_download_reburn",
-    version="0.3",
+    version="0.4",
     license="MIT",
     url="https://github.com/RyrieNorth/bilibili_video_download_reburn",
     description="A tool for downloading and processing Bilibili videos",
