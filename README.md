@@ -2,7 +2,7 @@
 
 一个简单的用于下载 Bilibili 视频的 Python 工具，支持单P与多P视频下载 </br>
 基于 [SocialSisterYi/bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) 开发</br>
-自 `v0.3` 版本开始已将 `windows` 与 `linux` 版本区分
+自 `v0.3` 版本开始已将 `windows` 与 `linux` 版本区分</br>
 `v0.4`版本新增番剧下载功能
 
 ## 功能
