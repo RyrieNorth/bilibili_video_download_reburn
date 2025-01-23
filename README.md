@@ -29,8 +29,8 @@
 
 2. 从release中下载安装(注意版本信息)：
    ```bash
-   wget https://github.com/RyrieNorth/bilibili_video_download_reburn/releases/download/v0.3/bilibili_video_download_reburn_for_linux-0.3-py3-none-any.whl
-   pip install bilibili_video_download_reburn_for_linux-0.3-py3-none-any.whl
+   wget https://github.com/RyrieNorth/bilibili_video_download_reburn/releases/download/v0.4/bilibili_video_download_reburn_for_linux-0.4-py3-none-any.whl
+   pip install bilibili_video_download_reburn_for_linux-0.4-py3-none-any.whl
 
 3. 如何卸载：
    ```bash
@@ -49,7 +49,8 @@
        "play_api": "https://api.bilibili.com/x/player/playurl",   //播放器api
        "convert_cid": "https://api.bilibili.com/x/player/pagelist",   //将bvid转为cid
        "login_url": "https://api.bilibili.com/x/web-interface/nav",   //查询用户登录状态
-       "video_info": "https://api.bilibili.com/x/web-interface/view"   //查询视频详细信息
+       "video_info": "https://api.bilibili.com/x/web-interface/view",   //查询视频详细信息
+       "get_anime": "http://api.bilibili.com/pgc/view/web/season"   //解析番剧bvid
      },
      "basic_headers": {
        "user-agent": "Mozilla/5.0",
@@ -69,15 +70,19 @@
 
 1. 在终端直接运行：
    ```bash
-   bl_download <BV号> 
-替换 <BV号> 为你要下载的视频 BV 号。(期间若没有登陆成功会触发登陆逻辑) </br>
+   bl_download <BV号/番剧号> 
+替换 <BV号> 为你要下载的视频 BV/番剧 号。(期间若没有登陆成功会触发登陆逻辑) </br>
 
 2. 作为库使用：
    ```python
    from bilibili_video_download import main
-   bv = "BV1Gg411L7zg"
-   main(bv)
-   
+   video_id = "BV1Gg411L7zg"
+   main(vedeo_id)
+
+   from bilibili_video_download import main
+   video_id = "ep1349841"
+   main(video_id)
+
 3. 使用演示</br>
 **当cookies信息不存在时：**</br></br>
 ![show_1](https://github.com/user-attachments/assets/4568d8c7-7ad1-4213-a129-71282cc8dd58)
