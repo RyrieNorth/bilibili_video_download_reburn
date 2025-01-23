@@ -15,7 +15,7 @@ setup(
     description="A tool for downloading and processing Bilibili videos",
     platforms=["any"],
     author="RyrieNorth",
-    author_email="bk15018708480@gmail.com",
+    author_email="2586649501@qq.com",
     install_requires=[
         "requests",
         "qrcode",
