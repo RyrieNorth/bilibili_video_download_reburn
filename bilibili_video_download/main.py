@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 import argparse
-import os
+import time
 import sys
+from multiprocessing import Process
 from .utils import load_config
 from .modules import (
     get_video_data,
     get_video_info,
-    get_video_part_info,
     get_video_download_info,
     get_anime_info,
     get_user_quality_choice,
@@ -51,11 +51,6 @@ def main(video_id):
                     merge_video(video_title)
                     print("视频下载完成, 视频文件存放在当前路径的'video'文件夹中")
             else:
-                video_part_info = get_video_part_info(video_id)
-                video_part_folder = os.path.join(
-                    config["video"]["video_path"], video_part_info["data"]["title"]
-                )
-
                 for video in video_data:
                     video_title = video["part"]
                     video_url, audio_url = get_video_download_info(
@@ -63,20 +58,32 @@ def main(video_id):
                     )
 
                     if video_url and audio_url:
-                        run_download(
-                            video_url, audio_url, video_title, video_part_folder
+                        p1 = Process(
+                            target=run_download(video_url, audio_url, video_title)
                         )
-                        merge_video(video_title, video_part_folder)
+                        p2 = Process(target=merge_video(video_title))
+                        p1.start()
+                        p2.start()
+                        p1.join()
+                        p2.join()
+                        time.sleep(0.75)
                     else:
                         for i in quality_ids:
                             video_url, audio_url = get_video_download_info(
                                 video_id, video, i
                             )
-                            if video_url:
-                                run_download(
-                                    video_url, audio_url, video_title, video_part_folder
+                            if video_url and audio_url:
+                                p1 = Process(
+                                    target=run_download(
+                                        video_url, audio_url, video_title
+                                    )
                                 )
-                                merge_video(video_title, video_part_folder)
+                                p2 = Process(target=merge_video(video_title))
+                                p1.start()
+                                p2.start()
+                                p1.join()
+                                p2.join()
+                                time.sleep(0.75)
                                 break
                         print(
                             "全部视频下载完成, 视频文件存放在当前路径的'video'文件夹中"
