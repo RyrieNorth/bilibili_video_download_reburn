@@ -77,7 +77,7 @@
    ```python
    from bilibili_video_download import main
    video_id = "BV1Gg411L7zg"
-   main(vedeo_id)
+   main(video_id)
 
    from bilibili_video_download import main
    video_id = "ep1349841"
