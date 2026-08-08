@@ -27,6 +27,5 @@ packages = ["bilidl"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-# 让测试无需安装本包即可 import bilidl
 pythonpath = ["."]
 addopts = "-q"
