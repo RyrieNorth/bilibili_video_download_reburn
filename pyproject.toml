@@ -1,0 +1,31 @@
+[project]
+name = "bilibili-video-download-reburn"
+version = "0.5.0"
+description = "一个简单的命令行交互式bilibili视频下载工具"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "qrcode>=8.2",
+    "requests>=2.34.2",
+    "rich>=13.7",
+]
+
+[project.scripts]
+bilidl = "bilidl.cli:run"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["bilidl", "tools"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
