@@ -115,7 +115,7 @@ class Authenticator:
                 hint="可加 --no-login 以游客身份继续，但清晰度会受限。",
             )
 
-        username, is_vip = self.check_login(cookies)
+        username, is_vip, _ = self.check_login(cookies)
         if not username:
             raise AuthError(
                 "登录后校验仍未通过，Cookies 可能不完整",
