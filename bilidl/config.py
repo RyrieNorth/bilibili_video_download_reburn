@@ -9,7 +9,7 @@ from typing import Any
 
 from .errors import ConfigError
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent
 CONFIG_FILE = PROJECT_ROOT / "config.json"
 COOKIES_FILE = PROJECT_ROOT / "cookie.json"
 

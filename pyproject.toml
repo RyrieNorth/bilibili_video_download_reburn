@@ -29,3 +29,6 @@ packages = ["bilidl", "tools"]
 testpaths = ["tests"]
 pythonpath = ["."]
 addopts = "-q"
+
+[tool.setuptools.package-data]
+bilidl = ["config.json"]
