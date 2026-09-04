@@ -1,6 +1,6 @@
 [project]
 name = "bilibili-video-download-reburn"
-version = "0.5.0"
+version = "0.6.0"
 description = "一个简单的命令行交互式bilibili视频下载工具"
 readme = "README.md"
 requires-python = ">=3.10"
