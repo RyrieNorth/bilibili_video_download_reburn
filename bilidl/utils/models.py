@@ -91,14 +91,18 @@ class QualityOption:
 
 @dataclass
 class Task:
-    """待处理的下载单元：视频流 + 音频流合并为一个 mp4。"""
+    """待处理的下载单元。
+
+    通常是视频流 + 音频流合并为一个 mp4；但 --only-video / --only-audio
+    模式下只保留其中一路，此时对应的 tmp 路径与另一路的 Stream 均为 None。
+    """
 
     page: Page
-    video: Stream
-    audio: Stream
     output: Path
-    video_tmp: Path
-    audio_tmp: Path
+    video: Stream | None = None
+    audio: Stream | None = None
+    video_tmp: Path | None = None
+    audio_tmp: Path | None = None
     quality_label: str = ""
     extra: dict = field(default_factory=dict)
 
@@ -109,7 +113,12 @@ class Task:
     @property
     def estimated_size(self) -> int:
         duration = self.page.duration
-        return self.video.estimated_size(duration) + self.audio.estimated_size(duration)
+        total = 0
+        if self.video is not None:
+            total += self.video.estimated_size(duration)
+        if self.audio is not None:
+            total += self.audio.estimated_size(duration)
+        return total
 
 
 _RANGE_PATTERN = re.compile(r"^(\d+)\s*-\s*(\d+)$")

@@ -22,7 +22,7 @@ from ..config import Settings
 from ..errors import BiliDLError, DownloadError, MuxError
 from .ffmpeg import FFmpegMuxer
 from ..utils.log import get_logger
-from ..utils.models import Page, Task, select_audio_stream, select_video_stream
+from ..utils.models import Page, Stream, Task, select_audio_stream, select_video_stream
 from ..paths import ensure_dir, sanitize_filename
 from ..utils.ui import TaskOutcome
 
@@ -39,17 +39,17 @@ class DownloadOptions:
     overwrite: bool = False
     keep_temp: bool = False
     dry_run: bool = False
+    only_video: bool = False
+    only_audio: bool = False
     interactive: bool = True
     concurrency: int | None = None
 
 
 @dataclass
 class _Pending:
-    """一个正在下载中的任务及其两个 GID。"""
-
     task: Task
-    video_gid: str
-    audio_gid: str
+    video_gid: str | None
+    audio_gid: str | None
     handle: ui.ProgressHandle
     done_video: bool = False
     done_audio: bool = False
@@ -61,8 +61,6 @@ class _Pending:
 
 
 class Downloader:
-    """对外只暴露 run()。"""
-
     def __init__(
         self,
         settings: Settings,
@@ -78,10 +76,6 @@ class Downloader:
         self.debug = debug
         self.output_dir = ensure_dir(settings.resolve_output_dir(options.output_dir))
         self.outcomes: list[TaskOutcome] = []
-
-    # ------------------------------------------------------------------
-    # 入口
-    # ------------------------------------------------------------------
 
     def run(self, raw_id: str) -> list[TaskOutcome]:
         id_type, video_id = normalize_video_id(raw_id)
@@ -136,8 +130,11 @@ class Downloader:
 
         probe = self.client.get_playurl(first_bvid, first.cid)
         quality_options = self.client.get_quality_options(probe)
+        # --only-audio 时音轨与 qn 无关，不必询问，静静取可用最高档即可
         quality = ui.select_quality(
-            quality_options, self.options.quality, self.options.interactive
+            quality_options,
+            self.options.quality,
+            self.options.interactive and not self.options.only_audio,
         )
         logger.debug(f"目标清晰度 qn={quality}")
 
@@ -179,14 +176,18 @@ class Downloader:
         multi: bool,
     ) -> Task:
         videos, audios = self.client.parse_streams(playurl)
-        video, downgraded = select_video_stream(videos, quality)
-        audio = select_audio_stream(audios)
 
-        if downgraded:
-            logger.warning(
-                f"{page.display_title}: 目标清晰度不可用，已降级为 {video.label} "
-                f"(qn={video.stream_id})"
-            )
+        video: Stream | None = None
+        audio: Stream | None = None
+        if not self.options.only_audio:
+            video, downgraded = select_video_stream(videos, quality)
+            if downgraded:
+                logger.warning(
+                    f"{page.display_title}: 目标清晰度不可用，已降级为 {video.label} "
+                    f"(qn={video.stream_id})"
+                )
+        if not self.options.only_video:
+            audio = select_audio_stream(audios)
 
         # 多P时用 "稿件标题 - P1 分P标题" 便于归档；单P直接用标题
         if multi:
@@ -206,14 +207,22 @@ class Downloader:
                 bvid=page.bvid,
             )
 
+        # --only-audio 输出为 .m4a，其余情况（完整下载 / --only-video）都是 .mp4
+        if self.options.only_audio:
+            output = self.output_dir / f"{stem}.m4a"
+            quality_label = audio.label
+        else:
+            output = self.output_dir / f"{stem}.mp4"
+            quality_label = video.label
+
         return Task(
             page=page,
             video=video,
             audio=audio,
-            output=self.output_dir / f"{stem}.mp4",
-            video_tmp=self.output_dir / f"{stem}.video.m4s",
-            audio_tmp=self.output_dir / f"{stem}.audio.m4s",
-            quality_label=video.label,
+            output=output,
+            video_tmp=self.output_dir / f"{stem}.video.m4s" if video is not None else None,
+            audio_tmp=self.output_dir / f"{stem}.audio.m4s" if audio is not None else None,
+            quality_label=quality_label,
         )
 
     # ------------------------------------------------------------------
@@ -251,7 +260,7 @@ class Downloader:
                 TaskOutcome(
                     name=task.name,
                     state="skipped",
-                    detail="目标文件已存在（用 --overwrite 强制重下）",
+                    detail="目标文件已存在（使用 --overwrite 强制重下）",
                     output=task.output,
                 )
             )
@@ -290,8 +299,9 @@ class Downloader:
             if active:
                 for item, error in self._refresh(rpc, active):
                     # 另一路流可能还在跑，一并停掉以节省带宽
-                    rpc.remove(item.video_gid)
-                    rpc.remove(item.audio_gid)
+                    for gid in (item.video_gid, item.audio_gid):
+                        if gid is not None:
+                            rpc.remove(gid)
                     item.handle.fail(f"失败 {ui.truncate(item.task.name, 26)}")
                     self._record_failure(item.task.name, error)
                     logger.error(f"{item.task.name}: {error}")
@@ -322,37 +332,48 @@ class Downloader:
         progress: ui.TransferProgress,
         cookie_header: str,
     ) -> _Pending:
-        """把一对音视频提交给 aria2，返回待跟踪对象。"""
+        """把一对（或单路）音视频提交给 aria2，返回待跟踪对象。"""
         if self.options.overwrite:
             # 重下时清掉可能残留的半成品，避免 --continue 接到旧数据上
             for temp in (task.video_tmp, task.audio_tmp):
-                temp.unlink(missing_ok=True)
+                if temp is not None:
+                    temp.unlink(missing_ok=True)
 
-        video_gid = rpc.add_uri(
-            task.video.urls,
-            build_download_options(
-                task.video_tmp.name,
-                self.settings.referer,
-                self.settings.user_agent,
-                cookie_header,
-            ),
-        )
-        audio_gid = rpc.add_uri(
-            task.audio.urls,
-            build_download_options(
-                task.audio_tmp.name,
-                self.settings.referer,
-                self.settings.user_agent,
-                cookie_header,
-            ),
-        )
+        video_gid: str | None = None
+        audio_gid: str | None = None
+        if task.video is not None:
+            video_gid = rpc.add_uri(
+                task.video.urls,
+                build_download_options(
+                    task.video_tmp.name,
+                    self.settings.referer,
+                    self.settings.user_agent,
+                    cookie_header,
+                ),
+            )
+        if task.audio is not None:
+            audio_gid = rpc.add_uri(
+                task.audio.urls,
+                build_download_options(
+                    task.audio_tmp.name,
+                    self.settings.referer,
+                    self.settings.user_agent,
+                    cookie_header,
+                ),
+            )
         logger.debug(
             f"{task.name}: 提交下载 video_gid={video_gid} audio_gid={audio_gid}"
         )
 
         handle = progress.add(task.name, total=task.estimated_size)
         return _Pending(
-            task=task, video_gid=video_gid, audio_gid=audio_gid, handle=handle
+            task=task,
+            video_gid=video_gid,
+            audio_gid=audio_gid,
+            handle=handle,
+            # 未提交的那路直接视为已完成，不用等它的状态
+            done_video=task.video is None,
+            done_audio=task.audio is None,
         )
 
     def _refresh(
@@ -362,13 +383,18 @@ class Downloader:
 
         返回本轮新出现的失败项，由调用方决定如何处理。
         """
-        gids = [gid for item in active for gid in (item.video_gid, item.audio_gid)]
+        gids = [
+            gid
+            for item in active
+            for gid in (item.video_gid, item.audio_gid)
+            if gid is not None
+        ]
         statuses = rpc.tell_status_batch(gids)
         failures: list[tuple[_Pending, DownloadError]] = []
 
         for item in active:
-            video = statuses.get(item.video_gid)
-            audio = statuses.get(item.audio_gid)
+            video = statuses.get(item.video_gid) if item.video_gid else None
+            audio = statuses.get(item.audio_gid) if item.audio_gid else None
 
             completed = 0
             total = 0
@@ -406,17 +432,32 @@ class Downloader:
         return failures
 
     def _mux_one(self, muxer: FFmpegMuxer, item: _Pending) -> Path:
-        """在合并线程里执行 ffmpeg，并按需清理临时文件。"""
+        """在合并线程里执行 ffmpeg，并按需清理临时文件。
+
+        只下载了单路流（--only-video / --only-audio）时改走 remux，
+        不尝试与存在不存在的另一路合并。
+        """
         task = item.task
-        result = muxer.mux(
-            task.video_tmp,
-            task.audio_tmp,
-            task.output,
-            duration=task.page.duration,
-        )
+        if task.video is not None and task.audio is not None:
+            result = muxer.mux(
+                task.video_tmp,
+                task.audio_tmp,
+                task.output,
+                duration=task.page.duration,
+            )
+        elif task.video is not None:
+            result = muxer.remux(
+                task.video_tmp, task.output, kind="video", duration=task.page.duration
+            )
+        else:
+            result = muxer.remux(
+                task.audio_tmp, task.output, kind="audio", duration=task.page.duration
+            )
 
         if not self.options.keep_temp:
             for temp in (task.video_tmp, task.audio_tmp):
+                if temp is None:
+                    continue
                 try:
                     temp.unlink(missing_ok=True)
                 except OSError as exc:
@@ -432,7 +473,6 @@ class Downloader:
             self._record_failure(item.task.name, exc)
             logger.error(f"{item.task.name}: {exc}")
             if exc.stderr_tail:
-                # ffmpeg 自己的报错才是根因，藏在 DEBUG 里等于没有
                 logger.error(f"ffmpeg 输出:\n{exc.stderr_tail}")
             return
         except Exception as exc:

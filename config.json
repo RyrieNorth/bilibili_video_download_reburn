@@ -6,7 +6,8 @@
     "convert_cid": "https://api.bilibili.com/x/player/pagelist",
     "login_url": "https://api.bilibili.com/x/web-interface/nav",
     "video_info": "https://api.bilibili.com/x/web-interface/view",
-    "get_anime": "https://api.bilibili.com/pgc/view/web/season"
+    "get_anime": "https://api.bilibili.com/pgc/view/web/season",
+    "ai_subtitle": "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod"
   },
   "basic_headers": {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",

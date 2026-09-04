@@ -17,6 +17,8 @@ def download(
     *,
     quality: str | int | None = None,
     pages: str | None = None,
+    only_video: bool = False,
+    only_audio: bool = False,
     output_dir: str | Path | None = None,
     overwrite: bool = False,
     keep_temp: bool = False,
@@ -54,6 +56,8 @@ def download(
     options = DownloadOptions(
         quality=quality,
         pages=pages,
+        only_video=only_video,
+        only_audio=only_audio,
         output_dir=str(output_dir) if output_dir is not None else None,
         overwrite=overwrite,
         keep_temp=keep_temp,
@@ -70,3 +74,7 @@ def download(
         ui.show_summary(outcomes, downloader.output_dir)
 
     return outcomes
+
+
+# 兼容旧写法 main(video_id)
+main = download

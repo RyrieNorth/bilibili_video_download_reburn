@@ -97,7 +97,7 @@ class Authenticator:
 
         username, is_vip, vip_type = self.check_login(cookies)
         if username:
-            logger.info(f"Cookies 有效，当前用户: {username} {f"({vip_type})" if is_vip else ''}")
+            logger.info(f"Cookies 有效，当前用户: {username}{f' ({vip_type})' if is_vip else ''}")
             return LoginState(cookies=cookies, username=username, is_vip=is_vip)
 
         logger.warning("本地 Cookies 已失效")

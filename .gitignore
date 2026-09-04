@@ -11,6 +11,7 @@ cookie.json
 .pytest_cache/
 video/
 tips.txt
+test/
 
 # Virtual environments
 .venv

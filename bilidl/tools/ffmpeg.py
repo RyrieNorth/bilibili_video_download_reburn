@@ -85,6 +85,36 @@ class FFmpegMuxer:
         ]
         return command
 
+    def build_single_command(
+        self,
+        source: Path,
+        output: Path,
+        kind: str,
+        progress_path: Path | None = None,
+    ) -> list[str]:
+        """--only-video / --only-audio：只复制单一路流，不重编码。
+
+        kind 为 "video" 或 "audio"，决定取哪一路 map 以及是否需要 faststart。
+        """
+        command = [
+            str(self.executable),
+            "-hide_banner",
+            "-nostdin",
+            "-loglevel",
+            "error",
+        ]
+        if progress_path is not None:
+            command += ["-progress", str(progress_path), "-nostats"]
+        stream_map = "0:v:0" if kind == "video" else "0:a:0"
+        command += ["-y", "-i", str(source), "-map", stream_map, "-c", "copy"]
+        if kind == "video":
+            # 音频容器（.m4a）不需要 faststart
+            command += ["-movflags", "+faststart"]
+        # 这个精简构建只编译了 mp4 muxer，没有 ipod/m4a，靠扩展名猜 muxer
+        # 对 .m4a 输出会报 "Unable to choose an output format"，必须显式指定
+        command += ["-f", "mp4", str(output)]
+        return command
+
     def mux(
         self,
         video: Path,
@@ -97,7 +127,45 @@ class FFmpegMuxer:
 
         duration 为视频秒数，用于把 out_time_ms 换算成百分比；为 0 时不报进度。
         """
-        self._check_inputs(video, audio)
+        self._check_input(video, "视频")
+        self._check_input(audio, "音频")
+        return self._run(
+            lambda progress_path: self.build_command(video, audio, output, progress_path),
+            output,
+            duration,
+            on_progress,
+        )
+
+    def remux(
+        self,
+        source: Path,
+        output: Path,
+        kind: str,
+        duration: int = 0,
+        on_progress: ProgressCallback | None = None,
+    ) -> MuxResult:
+        """--only-video / --only-audio 场景下把单一路流复制进最终容器。
+
+        kind 为 "video" 或 "audio"；不做二次编码，只是换容器（沿用 mux 的
+        进度/错误处理逻辑）。
+        """
+        label = "视频" if kind == "video" else "音频"
+        self._check_input(source, label)
+        return self._run(
+            lambda progress_path: self.build_single_command(source, output, kind, progress_path),
+            output,
+            duration,
+            on_progress,
+        )
+
+    def _run(
+        self,
+        command_factory: Callable[[Path], list[str]],
+        output: Path,
+        duration: int,
+        on_progress: ProgressCallback | None,
+    ) -> MuxResult:
+        """跑一次 ffmpeg 子进程并等待完成，mux/remux 共用同一套进度轮询与报错。"""
         output.parent.mkdir(parents=True, exist_ok=True)
 
         # 进度与 stderr 均落临时文件：既绕开精简构建缺失的 pipe 协议，
@@ -107,7 +175,7 @@ class FFmpegMuxer:
             stderr_path = Path(tmpdir) / "stderr.txt"
             progress_path.touch()
 
-            command = self.build_command(video, audio, output, progress_path)
+            command = command_factory(progress_path)
             logger.debug(f"运行 ffmpeg: {' '.join(command)}")
 
             try:
@@ -146,7 +214,7 @@ class FFmpegMuxer:
                 stderr_tail=_tail(stderr, 20),
             )
 
-        logger.debug(f"合并完成: {output}")
+        logger.debug(f"处理完成: {output}")
         return MuxResult(output=output, duration_ms=last_time_ms // 1000)
 
     def _watch(
@@ -183,18 +251,17 @@ class FFmpegMuxer:
         return reader.pump(duration, on_progress)
 
     @staticmethod
-    def _check_inputs(video: Path, audio: Path) -> None:
-        for label, path in (("视频", video), ("音频", audio)):
-            if not path.exists():
-                raise MuxError(
-                    f"{label}文件不存在: {path}",
-                    hint="下载可能未完成，请重新运行。",
-                )
-            if path.stat().st_size == 0:
-                raise MuxError(
-                    f"{label}文件为空: {path}",
-                    hint="下载结果异常，请加 --overwrite 重新下载。",
-                )
+    def _check_input(path: Path, label: str) -> None:
+        if not path.exists():
+            raise MuxError(
+                f"{label}文件不存在: {path}",
+                hint="下载可能未完成，请重新运行。",
+            )
+        if path.stat().st_size == 0:
+            raise MuxError(
+                f"{label}文件为空: {path}",
+                hint="下载结果异常，请加 --overwrite 重新下载。",
+            )
 
 
 class _ProgressFile:

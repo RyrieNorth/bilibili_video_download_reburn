@@ -36,6 +36,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     selection = parser.add_argument_group("选择")
+    stream_mode = selection.add_mutually_exclusive_group()
+    stream_mode.add_argument(
+        "--only-video",
+        action="store_true",
+        help="仅下载视频流，不下载音频（输出 .mp4，仅含画面）",
+    )
+    stream_mode.add_argument(
+        "--only-audio",
+        action="store_true",
+        help="仅下载音频流，不下载视频（输出 .m4a）",
+    )
     selection.add_argument(
         "--quality",
         metavar="Q",
@@ -138,6 +149,8 @@ def _run(args: argparse.Namespace, debug: bool) -> int:
     )
 
     options = DownloadOptions(
+        only_video=args.only_video,
+        only_audio=args.only_audio,
         quality=args.quality,
         pages=args.pages,
         output_dir=args.output,

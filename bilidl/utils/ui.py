@@ -210,9 +210,9 @@ def show_plan(tasks: Sequence[Task], output_dir: Path) -> None:
         table.add_row(
             str(index),
             truncate(task.name, 30),
-            task.quality_label or task.video.label,
-            task.video.codec or "-",
-            task.audio.label,
+            task.quality_label or "-",
+            task.video.codec if task.video else "-",
+            task.audio.label if task.audio else "-",
             format_size(task.estimated_size),
             task.output.name,
         )

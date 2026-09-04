@@ -199,6 +199,9 @@ class BiliClient:
         return data
 
 
+    def get_ai_subtitle(self, aid: int, cid: int, auth_key: str):
+        pass
+
     def get_pages(self, video_type: str, video_id: str) -> tuple[str, list[Page]]:
         """返回 (稿件标题, 分P列表)。单P时列表长度为 1。"""
         view = self.get_video_view(video_type, video_id)

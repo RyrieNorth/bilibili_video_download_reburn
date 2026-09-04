@@ -88,9 +88,14 @@ class Settings:
             ) from exc
 
     def resolve_output_dir(self, override: str | None = None) -> Path:
+        """确定输出目录。相对路径基于当前工作目录，不是安装路径：
+
+        命令行工具的相对路径约定应该相对于用户运行命令时的 cwd，
+        否则 --output ./out 会跟着安装位置跑，与用户预期不符。
+        """
         raw = override or self.download.output_dir
         path = Path(raw).expanduser()
-        return path if path.is_absolute() else (PROJECT_ROOT / path)
+        return path if path.is_absolute() else (Path.cwd() / path)
 
 
 def _as_section(data: dict[str, Any], key: str) -> dict[str, Any]:
